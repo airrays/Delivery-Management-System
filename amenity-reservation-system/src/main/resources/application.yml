@@ -21,6 +21,10 @@ spring:
   logging:
     level:
       ROOT: D
+#  devtools:
+#    restart:
+#      trigger-file:restart.now
+
 springdoc:
   pathsToMatch: /api/**
 

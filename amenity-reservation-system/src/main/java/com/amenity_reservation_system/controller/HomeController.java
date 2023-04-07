@@ -1,5 +1,6 @@
 package com.amenity_reservation_system.controller;
 
+import com.amenity_reservation_system.model.ConfirmationToken;
 import com.amenity_reservation_system.model.Reservation;
 import com.amenity_reservation_system.model.User;
 import com.amenity_reservation_system.service.ReservationService;
@@ -7,13 +8,15 @@ import com.amenity_reservation_system.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
-
+import org.springframework.*;
+import com.amenity_reservation_system.model.ConfirmationToken;
 import java.util.Set;
 
 //annotate with @Controller instead of @RestController which implies that the controller will return REST response whereas
@@ -58,6 +61,30 @@ public class HomeController {
          * model.addAttribute("reservations",reservations);
          * return "reservations/list";
          */
+    }
+
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute("user") User user) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        user.setEnabled(false);
+        userService.save(user);
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(user);
+
+        confirmationTokenService.save(confirmationToken);
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject("Complete Registration!");
+        mailMessage.setFrom("your-email@gmail.com");
+        mailMessage.setText("To confirm your account, please click here : "
+                + "http://localhost:8080/confirm-account?token=" + confirmationToken.getConfirmationToken());
+
+        emailSenderService.sendEmail(mailMessage);
+
+        return "redirect:/login?success";
     }
 
     @PostMapping("/reservations-submit")
