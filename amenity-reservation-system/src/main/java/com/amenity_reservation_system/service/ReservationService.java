@@ -71,7 +71,9 @@ public class ReservationService {
     public void delete(final Long id) {
         reservationRepository.deleteById(id);
     }
-
+    public List<Reservation> findByName(String name){
+        return reservationRepository.findByName(name);
+    }
 //    private Reservation mapToDTO(final Reservation reservation,
 //            final Reservation Reservation) {
 //        Reservation.setId(reservation.getId());

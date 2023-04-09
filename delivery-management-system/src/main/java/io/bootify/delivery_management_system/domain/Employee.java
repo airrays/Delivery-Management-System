@@ -1,14 +1,13 @@
 package io.bootify.delivery_management_system.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Table;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 //import org.hibernate.annotations.Table;
 import org.springframework.data.annotation.CreatedDate;
@@ -20,18 +19,25 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "employee")
 public class Employee {
-
     @Id
     @Column(nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "primary_sequence",
+            sequenceName = "primary_sequence",
+            allocationSize = 1,
+            initialValue = 10000
+    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "primary_sequence")
     private Long id;
 
-    @Column(nullable = false, length = 32)
+    @Column(name="name",nullable = false, length = 32)
     private String name;
 
-    @Column(nullable = false, unique = true, length = 32)
+    @Column(nullable = false, name = "username",unique = true, length = 32)
     private String username;
 
     @Column(nullable = false, length = 64)
@@ -49,11 +55,16 @@ public class Employee {
     @Column(nullable = false)
     private Integer status;
 
+//    @Column
+//    private OffsetDateTime createTime;
+//
+//    @Column
+//    private OffsetDateTime updateTime;
     @Column
-    private OffsetDateTime createTime;
+    private LocalDateTime createTime;
 
     @Column
-    private OffsetDateTime updateTime;
+    private LocalDateTime updateTime;
 
     @Column
     private Long createUser;
@@ -61,12 +72,43 @@ public class Employee {
     @Column
     private Long updateUser;
 
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private OffsetDateTime dateCreated;
+    public Employee(String name, String username, String password, String phone, String sex, String idNumber, Integer status, LocalDateTime createTime, LocalDateTime updateTime, Long createUser, Long updateUser) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.phone = phone;
+        this.sex = sex;
+        this.idNumber = idNumber;
+        this.status = status;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.createUser = createUser;
+        this.updateUser = updateUser;
+    }
 
-    @LastModifiedDate
-    @Column(nullable = false)
-    private OffsetDateTime lastUpdated;
+//    @CreatedDate
+//    @Column(nullable = false, updatable = false)
+//    private OffsetDateTime dateCreated;
+//
+//    @LastModifiedDate
+//    @Column(nullable = false)
+//    private OffsetDateTime lastUpdated;
 
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", phone='" + phone + '\'' +
+                ", sex='" + sex + '\'' +
+                ", idNumber='" + idNumber + '\'' +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", createUser=" + createUser +
+                ", updateUser=" + updateUser +
+                '}';
+    }
 }

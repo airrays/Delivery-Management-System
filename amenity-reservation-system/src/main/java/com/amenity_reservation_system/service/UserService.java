@@ -60,6 +60,9 @@ public class UserService {
     public User getUserByUsername(String username){
         return userRepository.findUserByUsername(username);
     }
+    public User getUserByFullName(String fullname){
+        return userRepository.findUserByFullName(fullname);
+    }
 //
 //    private User mapToEntity(final User User, final User user) {
 //        return user;

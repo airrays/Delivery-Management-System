@@ -36,6 +36,9 @@ public class Reservation {
     )
     private Long id;
 
+    @Column(nullable = true)
+    private String name;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)  //every Reservation must have an AmenityType.
     private AmenityType amenityType;
@@ -84,4 +87,18 @@ public class Reservation {
         this.amenityType = amenityType;
     }
 
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", amenityType=" + amenityType +
+                ", reservationDate=" + reservationDate +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", user=" + user +
+                ", dateCreated=" + dateCreated +
+                ", lastUpdated=" + lastUpdated +
+                '}';
+    }
 }

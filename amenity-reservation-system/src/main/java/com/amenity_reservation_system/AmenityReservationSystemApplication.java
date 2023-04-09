@@ -61,14 +61,25 @@ public class AmenityReservationSystemApplication {
 //        };
 //    }
     @Bean
-    public CommandLineRunner loadData(UserRepository userRepository, CapacityRepository capacityRepository){
+    public CommandLineRunner loadData(UserRepository userRepository, CapacityRepository capacityRepository, ReservationRepository reservationRepository){
+        LocalDate reservationDate = LocalDate.of(2023, 4, 15);
+        LocalTime startTime = LocalTime.of(10, 0);
+        LocalTime endTime = LocalTime.of(12, 0);
+        //User user = new User("John Doe", "johndoe@example.com");
+        AmenityType am = AmenityType.SAUNA;
         return(args)->{
             userRepository.save(
                     new User("Anthony Davis","username2",bCryptPasswordEncoder().encode("123"))
             );
+            userRepository.save(
+                    new User("Le James","username3",bCryptPasswordEncoder().encode("123"))
+            );
             for(AmenityType amenityType:initialCapacities.keySet()){
                 capacityRepository.save(new Capacity(amenityType,initialCapacities.get(amenityType)));
             }
+            reservationRepository.save(
+                    new Reservation(reservationDate, startTime, endTime, userRepository.findUserByUsername("username3"), am)
+            );
         };
     }
     @Bean

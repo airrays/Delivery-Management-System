@@ -1,12 +1,20 @@
 spring:
   datasource:
+#    url: jdbc:mysql://localhost:3306/deliveryrestaurant?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+#    username: root
+#    password: root
     url: ${JDBC_DATABASE_URL:jdbc:mysql://localhost:3306/deliveryrestaurant?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true}
     username: ${JDBC_DATABASE_USERNAME:root}
     password: ${JDBC_DATABASE_PASSWORD:root}
+
 #    dbcp2:
 #      max-wait-millis: 30000
 #      validation-query: SELECT 1
 #      validation-query-timeout: 30
+  devtools:
+    restart:
+      enabled: true
+
 
   jpa:
     hibernate:
@@ -24,6 +32,20 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    mapper-locations: classpath*:io/bootify/delivery_management_system/mapper/*.java
   global-config:
     db-config:
       id-type:ASSIGN_ID
+#mybatis:
+#  mapper-locations: classpath*:io/bootify/delivery_management_system/mapper/*.java
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+    io.bootify.delivery_management_system: DEBUG
+#    com:
+#      example: TRACE
+
+server:
+  port: 8080
