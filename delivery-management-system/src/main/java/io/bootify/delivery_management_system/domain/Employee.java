@@ -1,5 +1,6 @@
 package io.bootify.delivery_management_system.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -41,6 +42,7 @@ public class Employee {
     private String username;
 
     @Column(nullable = false, length = 64)
+    @JsonIgnore
     private String password;
 
     @Column(nullable = false, length = 11)
@@ -52,8 +54,8 @@ public class Employee {
     @Column(nullable = false, length = 18)
     private String idNumber;
 
-    @Column(nullable = false)
-    private Integer status;
+    @Column(nullable = false, columnDefinition = "integer default 1")
+    private Integer status=1;
 
 //    @Column
 //    private OffsetDateTime createTime;
@@ -72,19 +74,22 @@ public class Employee {
     @Column
     private Long updateUser;
 
-    public Employee(String name, String username, String password, String phone, String sex, String idNumber, Integer status, LocalDateTime createTime, LocalDateTime updateTime, Long createUser, Long updateUser) {
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.phone = phone;
-        this.sex = sex;
-        this.idNumber = idNumber;
-        this.status = status;
-        this.createTime = createTime;
-        this.updateTime = updateTime;
-        this.createUser = createUser;
-        this.updateUser = updateUser;
-    }
+    @Version
+    private Long version;
+
+//    public Employee(String name, String username, String password, String phone, String sex, String idNumber, Integer status, LocalDateTime createTime, LocalDateTime updateTime, Long createUser, Long updateUser) {
+//        this.name = name;
+//        this.username = username;
+//        this.password = password;
+//        this.phone = phone;
+//        this.sex = sex;
+//        this.idNumber = idNumber;
+//        this.status = status;
+//        this.createTime = createTime;
+//        this.updateTime = updateTime;
+//        this.createUser = createUser;
+//        this.updateUser = updateUser;
+//    }
 
 //    @CreatedDate
 //    @Column(nullable = false, updatable = false)

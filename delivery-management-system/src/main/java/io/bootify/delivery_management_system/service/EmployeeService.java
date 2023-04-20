@@ -5,6 +5,6 @@ import io.bootify.delivery_management_system.domain.Employee;
 
 import java.util.List;
 
-public interface EmployeeService { //IService<Employee> from Base BaseMapper Class
+public interface EmployeeService{ //IService<Employee> from Base BaseMapper Class
 
 }

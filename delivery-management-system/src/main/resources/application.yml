@@ -19,6 +19,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+      show_sql: true
     open-in-view: false
     properties:
       hibernate:
@@ -32,10 +33,10 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    mapper-locations: classpath*:io/bootify/delivery_management_system/mapper/*.java
-  global-config:
-    db-config:
-      id-type:ASSIGN_ID
+    #mapper-locations: classpath*:io/bootify/delivery_management_system/mapper/*.java
+#  global-config:
+#    db-config:
+#      id-type:ASSIGN_ID
 #mybatis:
 #  mapper-locations: classpath*:io/bootify/delivery_management_system/mapper/*.java
 logging:
@@ -46,6 +47,10 @@ logging:
     io.bootify.delivery_management_system: DEBUG
 #    com:
 #      example: TRACE
-
+log4j:
+  logger:
+    org:
+      hibernate:
+        SQL: DEBUG
 server:
   port: 8080

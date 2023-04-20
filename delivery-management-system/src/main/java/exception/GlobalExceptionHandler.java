@@ -14,12 +14,13 @@ import java.sql.SQLIntegrityConstraintViolationException;
 @ResponseBody
 @Slf4j
 public class GlobalExceptionHandler {
+    //handle duplicated account name entry
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public R<String> exceptionHandler(SQLIntegrityConstraintViolationException exception){
         log.error(exception.getMessage());
         if(exception.getMessage().contains("Duplicate entry")){
             String[] splite=exception.getMessage().split(" ");
-            String msg=splite[2]+"Already Exist";
+            String msg=splite[2]+"Account Already Exist";
             return R.error(msg);
         }
         return R.error("Unknow Error");
