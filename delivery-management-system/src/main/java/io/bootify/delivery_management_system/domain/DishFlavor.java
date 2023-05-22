@@ -1,11 +1,8 @@
 package io.bootify.delivery_management_system.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +15,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@Table(name="dish_flavor")
 public class DishFlavor {
 
     @Id
@@ -25,21 +23,21 @@ public class DishFlavor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long dishId;
+//    @Column(nullable = false)
+//    private Long dishId;
 
     @Column(length = 64)
     private String name;
 
-    @Column(length = 500)
+    //flavor data list
+    @Column(length = 700)
     private String value;
 
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private OffsetDateTime dateCreated;
+    @Transient
+    private Integer isDeleted;
 
-    @LastModifiedDate
-    @Column(nullable = false)
-    private OffsetDateTime lastUpdated;
-
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="dish_id",nullable = false)
+    private Dish dish;
 }

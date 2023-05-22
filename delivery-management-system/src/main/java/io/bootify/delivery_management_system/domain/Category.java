@@ -1,11 +1,7 @@
 package io.bootify.delivery_management_system.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,18 +39,15 @@ public class Category {
     @Column
     private OffsetDateTime updateTime;
 
+    @Transient
+    @Column
+    private Integer isDeleted;
+
     @Column
     private Long createUser;
 
     @Column
     private Long updateUser;
 
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private OffsetDateTime dateCreated;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private OffsetDateTime lastUpdated;
 
 }

@@ -6,12 +6,11 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 //import org.hibernate.annotations.Table;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -26,13 +25,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Employee {
     @Id
     @Column(nullable = false, updatable = false)
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
-    @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "primary_sequence")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "primary_sequence")
     private Long id;
 
     @Column(name="name",nullable = false, length = 32)
@@ -62,35 +55,27 @@ public class Employee {
 //
 //    @Column
 //    private OffsetDateTime updateTime;
-    @Column
     private LocalDateTime createTime;
 
-    @Column
     private LocalDateTime updateTime;
 
-    @Column
+    @CreatedBy
+    @Column(updatable=false)
     private Long createUser;
 
-    @Column
+    @LastModifiedBy
     private Long updateUser;
 
     @Version
+    @Transient
     private Long version;
 
-//    public Employee(String name, String username, String password, String phone, String sex, String idNumber, Integer status, LocalDateTime createTime, LocalDateTime updateTime, Long createUser, Long updateUser) {
-//        this.name = name;
-//        this.username = username;
-//        this.password = password;
-//        this.phone = phone;
-//        this.sex = sex;
-//        this.idNumber = idNumber;
-//        this.status = status;
-//        this.createTime = createTime;
-//        this.updateTime = updateTime;
-//        this.createUser = createUser;
-//        this.updateUser = updateUser;
-//    }
-
+    @PrePersist
+    public void beforePersist(){
+        status=1;
+    }
+    @Transient
+    private String sessionId;
 //    @CreatedDate
 //    @Column(nullable = false, updatable = false)
 //    private OffsetDateTime dateCreated;

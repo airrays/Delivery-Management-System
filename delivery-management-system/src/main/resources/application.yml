@@ -23,11 +23,14 @@ spring:
     open-in-view: false
     properties:
       hibernate:
+#        generate_statistics: true
         jdbc:
           lob:
             non_contextual_creation: true
         id:
           new_generator_mappings: true
+  mvc:
+    log-request-details: true
 
 mybatis-plus:
   configuration:
@@ -47,6 +50,9 @@ logging:
     io.bootify.delivery_management_system: DEBUG
 #    com:
 #      example: TRACE
+
+
+
 log4j:
   logger:
     org:
@@ -54,3 +60,7 @@ log4j:
         SQL: DEBUG
 server:
   port: 8080
+delivery-management-system:
+  path: E:\Document\SpringDev-Test-Demo\delivery-management-system\imgs
+
+

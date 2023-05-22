@@ -36,12 +36,15 @@ public class EmployeeServiceImpl implements EmployeeService {  //provided by myb
     }
 
     @Transactional
-    public <T> Object updateEmployee(Long updateUserId){
-        Employee originalEmployee=employeeRepository.findById(updateUserId)
+    public <T> Object updateEmployee(Employee employee){
+        Employee originalEmployee=employeeRepository.findById(employee.getId())
                 .orElseThrow(()->new RuntimeException("EMPLOYEE NOT FOUND"));
         log.info(originalEmployee.toString());
         originalEmployee.setUpdateTime(LocalDateTime.now());
-        originalEmployee.setUpdateUser(updateUserId);
+        //originalEmployee.setUpdateUser(updateUserId);
+        originalEmployee.setUsername(String.valueOf(employee.getUsername()));
+        originalEmployee.setName(employee.getName());
+        log.info(originalEmployee.toString());
         try {
             Employee emp=employeeRepository.save(originalEmployee);
             log.info(String.valueOf(ResponseEntity.ok(emp.toString())));
@@ -51,7 +54,8 @@ public class EmployeeServiceImpl implements EmployeeService {  //provided by myb
             return emp;
         }catch (Exception e){
             log.warn(e.getMessage());
-            return R.error(e.getMessage());
+            //return R.error(e.getMessage());
         }
+        return new Employee();
     }
 }

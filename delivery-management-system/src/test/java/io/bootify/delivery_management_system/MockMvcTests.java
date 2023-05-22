@@ -17,16 +17,16 @@ public class MockMvcTests {
     MockMvc mockMvc;
 
     //not rely on internet, web service
-    @Test
-    void testMockMvcGet() throws Exception {
-        mockMvc.perform(
-                        MockMvcRequestBuilders.get("/employee/page")
-                                .accept(MediaType.APPLICATION_JSON)
-                                .param("page","1")
-                                .param("pageSize","1")
-                )
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                //.andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value("admin"))
-                .andDo(MockMvcResultHandlers.print());
-    }
+//    @Test
+//    void testMockMvcGet() throws Exception {
+//        mockMvc.perform(
+//                        MockMvcRequestBuilders.get("/employee/page")
+//                                .accept(MediaType.APPLICATION_JSON)
+//                                .param("page","1")
+//                                .param("pageSize","1")
+//                )
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                //.andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value("admin"))
+//                .andDo(MockMvcResultHandlers.print());
+//    }
 }

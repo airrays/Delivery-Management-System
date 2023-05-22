@@ -11,8 +11,10 @@ import io.bootify.delivery_management_system.service.EmployeeService;
 import io.bootify.delivery_management_system.service.EmployeeServiceImpl;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.http.ResponseEntity.notFound;
 
 //import com.baomidou.mybatisplus.autoconfigure.*;
 //import com.baomidou.*;
@@ -78,7 +82,7 @@ public class EmployeeController {
      * @return
      */
     @PostMapping
-    public R<String> save(HttpServletRequest request, @RequestBody Employee employee){
+    public ResponseEntity<EmployeeRecord> save(HttpServletRequest request, @RequestBody Employee employee){
         log.info("New Employee, Employee Info: {} ",employee.toString());
         log.info(request.getSession().getId());
         log.info((String) request.getSession().getAttribute("employee"));
@@ -91,7 +95,7 @@ public class EmployeeController {
         employee.setCreateUser(empId);
         employee.setUpdateUser(empId);
         employeeRepository.save(employee);
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body(new EmployeeRecord(employee.getId(), employee.getName(), employee.getStatus(),employee.getUpdateUser()));
     }
 
     /**
@@ -102,48 +106,83 @@ public class EmployeeController {
      * @return
      */
     @GetMapping("/page")
-    public List<EmployeeRecord> page(int page, int pageSize, @Nullable String name){
+    public ResponseEntity<?> page(int page, int pageSize, @Nullable String name){
         log.info("page = {}, pageSize= {}, name= {}",page,pageSize,name);
         //Page pageInfo= new Page(page, pageSize);
         //LambdaQueryWrapper<Employee> queryWrapper=new LambdaQueryWrapper();
-        List<EmployeeRecord> employees= new ArrayList<EmployeeRecord>();
+        List<Employee> employees;
         if(name!=null){
-            employees=employeeRepository.findByNameOrderByUpdateTimeAsc(name);
-            return employees;
+            employees=employeeRepository.findByUsernameOrderByUpdateTimeAsc(name);
+            return new ResponseEntity<>(employees,HttpStatus.OK);
         }
         else{
             employees=employeeRepository.findByOrderByUpdateTimeAsc();
-            return employees;
+            return new ResponseEntity<>(employees,HttpStatus.OK);
         }
         //return R.success(pageInfo);
     }
 
+    /***
+     * Update Employee some values {DEPRECATED} TESTING ONLY
+     * @param request
+     * @param employee
+     * @return
+     */
     @PutMapping
-    public R<String> update(HttpServletRequest request, @RequestBody Employee employee){
+    public String update(HttpServletRequest request, @RequestBody Employee employee){
         log.info(employee.toString());
         Long empId=(Long) request.getSession().getAttribute("employee");
+        log.debug(String.valueOf(empId));
         employee.setUpdateTime(LocalDateTime.now());
         employee.setUpdateUser(empId);
         try {
             Employee emp=employeeRepository.save(employee);
             log.info(String.valueOf(ResponseEntity.ok(emp.toString())));
-            return R.success("Updated Employee");
+            return JSON.toJSONString(R.success("Updated Employee"));
         }catch (Exception e){
             log.warn(e.getMessage());
-            return R.error(e.getMessage());
+            return JSON.toJSONString(R.error(e.getMessage()));
         }
     }
-    @GetMapping("{id}")
-    private EmployeeRecord getEmployee(@PathVariable Long id){
-//        Optional<Employee> employee = employeeRepository.findById(id);
-//        // map user data to UserRecord DTO
-//        if(employee!=null) {
-//            return new EmployeeRecord(employee.get().getUsername(), employee.get().getPhone());
-//        }
-//        return new EmployeeRecord("Null","Null");
-        Employee employee= (Employee) employeeService.updateEmployee(id);
-        return new EmployeeRecord(employee.getUsername(),employee.getPhone());
-    }
-    public record EmployeeRecord(String name, String phone){}
 
+    /***
+     * Update Employee some values
+     * @param request
+     * @param employee
+     * @return
+     */
+    @PutMapping("/update")
+    @ResponseBody
+    public ResponseEntity<EmployeeRecord> updateEmployee(HttpServletRequest request, @RequestBody Employee employee){
+        Long empId=(Long) request.getSession().getAttribute("employee");
+        long id=Thread.currentThread().getId();
+        log.info("Thread Id: {}", id);
+        log.debug(String.valueOf(empId));
+        log.info(employee.toString());
+        Employee emp= (Employee) employeeService.updateEmployee(employee);
+        if(emp != null){
+            log.info("PUT Employee Username Name Updated");
+        }
+        return ResponseEntity.ok(new EmployeeRecord(emp.getId(),emp.getUsername(),emp.getStatus(),emp.getUpdateUser()));
+    }
+
+    /***
+     * Get Employee, return EmployeeRecord
+     * @param id
+     * @return
+     */
+    @GetMapping("{id}")
+    private ResponseEntity<?> getEmployee(@PathVariable Long id){
+        Optional<Employee> employee = employeeRepository.findById(id);
+//        // map user data to UserRecord DTO
+        if(employee!=null) {
+            return ResponseEntity.ok(new EmployeeRecord(employee.get().getId(), employee.get().getUsername(), employee.get().getStatus(), employee.get().getUpdateUser()));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found by ID");
+        //return ResponseEntity.notFound().build();
+//        return new EmployeeRecord("Null","Null");
+        //Employee employee= (Employee) employeeService.updateEmployee(id);
+        //return new EmployeeRecord(employee.getUsername(),employee.getPhone());
+    }
+    public record EmployeeRecord(@Nullable Long id, String userName, Integer status, Long updatedUser){}
 }

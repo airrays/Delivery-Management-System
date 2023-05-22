@@ -23,7 +23,8 @@ public class LoginCheckFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request=(HttpServletRequest)servletRequest;
         HttpServletResponse response=(HttpServletResponse) servletResponse;
-
+        long id=Thread.currentThread().getId();
+        log.info("Thread Id: {}", id);
         String requestURI=request.getRequestURI();
         log.info("Intercept request: {}",request.getRequestURI());
         //pass urls

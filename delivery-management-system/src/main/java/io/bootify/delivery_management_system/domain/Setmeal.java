@@ -1,11 +1,7 @@
 package io.bootify.delivery_management_system.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import lombok.Getter;
@@ -35,12 +31,15 @@ public class Setmeal {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal price;
 
+    //0:stop 1:active
     @Column
     private Integer status;
 
     @Column(name = "\"description\"", length = 512)
     private String description;
 
+    @Column
+    private String code;
     @Column
     private String image;
 
@@ -63,5 +62,9 @@ public class Setmeal {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
+
+    @Transient
+    @Column
+    private Integer isDeleted;
 
 }

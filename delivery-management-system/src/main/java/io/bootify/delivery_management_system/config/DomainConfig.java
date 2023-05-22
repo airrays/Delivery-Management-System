@@ -11,16 +11,16 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
-@Configuration
-@EntityScan("io.bootify.delivery_management_system.domain")
-@EnableJpaRepositories("io.bootify.delivery_management_system.repos")
-@EnableTransactionManagement
-@EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
-public class DomainConfig {
-
-    @Bean(name = "auditingDateTimeProvider")
-    public DateTimeProvider dateTimeProvider() {
-        return () -> Optional.of(OffsetDateTime.now());
-    }
-
-}
+//@Configuration
+//@EntityScan("io.bootify.delivery_management_system.domain")
+//@EnableJpaRepositories("io.bootify.delivery_management_system.repos")
+//@EnableTransactionManagement
+//@EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
+//public class DomainConfig {
+//
+//    @Bean(name = "auditingDateTimeProvider")
+//    public DateTimeProvider dateTimeProvider() {
+//        return () -> Optional.of(OffsetDateTime.now());
+//    }
+//
+//}

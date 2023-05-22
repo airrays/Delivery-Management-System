@@ -6,11 +6,12 @@ import org.mybatis.spring.annotation.MapperScans;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Slf4j
+//@EnableTransactionManagement //Multi table operation. SpringBoot default true
 @SpringBootApplication
 @ServletComponentScan //scan @WebFilter
-//@MapperScan("io.bootify.delivery_management_system.mapper")
 public class DeliveryManagementSystemApplication {
 
     public static void main(final String[] args) {
